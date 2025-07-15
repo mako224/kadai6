@@ -45,6 +45,23 @@ def country_trendline(country_name):
     Returns:
         tuple: A tuple containing the slope and R-squared value of the trendline.
     """
+    
+    aliases = {
+        "korea": "Republic of Korea",
+        "south korea": "Republic of Korea",
+
+        "usa": "United States of America",
+        "us": "United States of America",
+        "united states": "United States of America",
+
+        "uk": "United Kingdom of Great Britain and Northern Ireland",
+        "united kingdom": "United Kingdom of Great Britain and Northern Ireland",
+        "england": "United Kingdom of Great Britain and Northern Ireland"
+    }
+    normalized = country_name.strip().lower()
+    if normalized in aliases:
+        country_name = aliases[normalized]
+
     df = process_sdg_data(
         "SG_GEN_PARL.xlsx",
         [
@@ -65,6 +82,31 @@ def country_trendline(country_name):
     return slope, r_squared, intercept
 
 def generate_image(country_name):
+    """Generate and save a line plot with a trendline for the given country.
+
+    Args:
+        country_name (str): The name of the country as represented in the SDG database.
+
+    Returns:
+        str: Filename of the saved image.
+    """
+
+    aliases = {
+        "korea": "Republic of Korea",
+        "south korea": "Republic of Korea",
+
+        "usa": "United States of America",
+        "us": "United States of America",
+        "united states": "United States of America",
+
+        "uk": "United Kingdom of Great Britain and Northern Ireland",
+        "united kingdom": "United Kingdom of Great Britain and Northern Ireland",
+        "england": "United Kingdom of Great Britain and Northern Ireland"
+    }
+    normalized = country_name.strip().lower()
+    if normalized in aliases:
+        country_name = aliases[normalized]
+
     df = process_sdg_data(
         "SG_GEN_PARL.xlsx",
             [
@@ -79,6 +121,9 @@ def generate_image(country_name):
             "Units",
             ],
     )
+
+    if country_name not in df.columns:
+        return country_name + ".png"
 
     import matplotlib
     matplotlib.use('Agg')
